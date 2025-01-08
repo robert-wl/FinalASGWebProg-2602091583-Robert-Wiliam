@@ -28,9 +28,10 @@ class User extends Authenticatable
         'mobile',
         'coins',
         'visibility',
-        'avatar'
+        'avatar',
+        'paid'
     ];
-    
+
     /**
      * The attributes that should be hidden for serialization.
      *

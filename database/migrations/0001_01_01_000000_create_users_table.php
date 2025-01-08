@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string('mobile');
             $table->integer('coins')->default(0);
             $table->boolean('visibility')->default(true);
+            $table->boolean('paid')->default(false);
             $table->string('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();

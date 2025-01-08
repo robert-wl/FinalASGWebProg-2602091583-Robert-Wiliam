@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('gender', ['Male', 'Female']);
-            $table->text('interests')->nullable();
-            $table->string('social_links')->nullable();
+            $table->text('summary')->nullable();
+            $table->string('linkedin')->nullable();
             $table->string('mobile');
             $table->integer('coins')->default(0);
             $table->boolean('visibility')->default(true);

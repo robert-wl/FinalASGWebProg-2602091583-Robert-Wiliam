@@ -1,52 +1,64 @@
-@extends('app')
+@extends('layouts.app')
 
 @section('content')
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <h2>Payment Page</h2>
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h2 class="text-center mb-0">Payment Page</h2>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('payment.process') }}" method="POST">
-                            @csrf
+                        <h4 class="mb-4">Registration Fee:
+                            <strong>Rp {{ number_format($registration_fee, 0, ',', '.') }}</strong></h4>
 
-                            <p><strong>Registration Fee:</strong> {{ session('registration_price', 100000) }} coins</p>
-
-                            <!-- Payment Amount -->
-                            <div class="mb-3">
-                                <label for="payment_amount" class="form-label">Enter Payment Amount</label>
-                                <input type="number" id="payment_amount" name="payment_amount" class="form-control"
-                                       required>
+                        @if (session('message'))
+                            <div class="alert alert-info">
+                                {{ session('message') }}
                             </div>
+                        @endif
 
-                            <!-- Validation Messages -->
-                            @if(session('message'))
-                                <div class="alert alert-info">
-                                    {{ session('message') }}
+                        @if(!session('overpaid'))
+                            <form action="{{ route('payment.process') }}" method="POST" class="needs-validation"
+                                  novalidate>
+                                @csrf
+
+                                <div class="mb-4">
+                                    <label for="amount" class="form-label fw-bold">Payment Amount</label>
+                                    <input type="number" id="amount" name="amount"
+                                           class="form-control @error('amount') is-invalid @enderror"
+                                           value="{{ old('amount') }}" required>
+                                    @error('amount')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text text-muted">
+                                        Enter the amount you want to pay in Indonesian Rupiah.
+                                    </small>
                                 </div>
-                            @endif
 
-                            <!-- Submit Button -->
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Pay</button>
-                            </div>
-                        </form>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-lg">Make Payment</button>
+                                </div>
+                            </form>
+                        @endif
 
-                        <!-- Handle Overpaid -->
-                        @if(session('overpaid_amount'))
-                            <div class="mt-4">
-                                <p>You overpaid by <strong>{{ session('overpaid_amount') }} coins</strong>.</p>
-                                <p>Would you like to enter the balance into your wallet?</p>
-                                <form action="{{ route('payment.overpaid') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" name="add_to_wallet" value="yes" class="btn btn-success">Yes
+                        @if(session('overpaid'))
+                            <form action="{{ route('payment.overpay') }}" method="POST" class="mt-4">
+                                @csrf
+                                <input type="hidden" name="overpaid_amount" value="{{ session('overpaid') }}">
+
+                                <h5>You overpaid Rp {{ number_format(session('overpaid'), 0, ',', '.') }}.</h5>
+                                <p>Would you like to:</p>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" name="action" value="wallet" class="btn btn-primary">
+                                        Add to Wallet
                                     </button>
-                                    <button type="submit" name="add_to_wallet" value="no" class="btn btn-danger">No
+                                    <button type="submit" name="action" value="reenter" class="btn btn-warning">
+                                        Re-enter Amount
                                     </button>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         @endif
                     </div>
                 </div>

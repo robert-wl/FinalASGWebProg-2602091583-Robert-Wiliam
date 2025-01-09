@@ -13,3 +13,5 @@ Route::post('/register', [AuthController::class, 'create_user'])->name('create_u
 
 
 Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
+Route::post('/payment', [PaymentController::class, 'process_payment'])->name('payment.process');
+Route::post('/payment/overpay', [PaymentController::class, 'handle_overpayment'])->name('payment.overpay');

@@ -29,7 +29,8 @@ class User extends Authenticatable
         'coins',
         'visibility',
         'avatar',
-        'paid'
+        'paid',
+        'registration_fee'
     ];
 
     /**

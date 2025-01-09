@@ -137,6 +137,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
                                     <input type="text" class="form-control"
+                                           name="registration_fee"
                                            value="{{ $registration_fee }}"
                                            readonly>
                                 </div>

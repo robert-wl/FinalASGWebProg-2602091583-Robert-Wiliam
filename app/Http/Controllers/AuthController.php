@@ -13,13 +13,18 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    private User $user;
 
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
     public function register(): View|Factory|Application
     {
         $registration_fee = rand(100000, 125000);
         return view('pages.register', [
-            'registration_fee' => $registration_fee
+            'registration_fee' => $registration_fee,
         ]);
     }
 
@@ -39,12 +44,13 @@ class AuthController extends Controller
             'linkedin' => ['required', 'string', 'regex:/^[a-zA-Z0-9-]+$/'],
             'mobile' => ['required', 'string', 'regex:/^[0-9]+$/'],
             'summary' => ['required', 'string', 'min:10'],
+            'registration_fee' => ['required', 'numeric'],
         ], [
             'password.regex' => 'Password must contain at least one letter, one number, and one special character.',
             'fields.min' => 'Please select at least 3 fields of interest.',
             'linkedin.regex' => 'LinkedIn username can only contain letters, numbers, and hyphens.',
             'mobile.regex' => 'Mobile number must contain only digits.',
-            'summary.min' => 'Professional summary must be at least 100 characters long.'
+            'summary.min' => 'Professional summary must be at least 100 characters long.',
         ]);
 
         if ($validator->fails()) {
@@ -54,7 +60,7 @@ class AuthController extends Controller
                 ->withInput();
         }
 
-        $user = User::create([
+        $user = $this->user->create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -63,12 +69,12 @@ class AuthController extends Controller
             'linkedin' => $request->linkedin,
             'mobile' => $request->mobile,
             'summary' => $request->summary,
-            'registration_fee' => rand(100000, 125000)
+            'registration_fee' => $request->registration_fee,
         ]);
 
         auth()->login($user);
 
-        return redirect()->route('home')
+        return redirect()->route('payment.process')
             ->with('success', 'Account created successfully! Welcome to Job Friends.');
     }
 }

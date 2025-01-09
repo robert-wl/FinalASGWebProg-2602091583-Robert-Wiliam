@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->text('summary')->nullable();
             $table->string('linkedin')->nullable();
             $table->string('mobile');
+            $table->string('registration_fee')->nullable();
             $table->integer('coins')->default(0);
             $table->boolean('visibility')->default(true);
             $table->boolean('paid')->default(false);

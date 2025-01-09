@@ -8,11 +8,13 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
     private User $user;
 
     public function __construct(User $user)
@@ -76,5 +78,27 @@ class AuthController extends Controller
 
         return redirect()->route('payment.process')
             ->with('success', 'Account created successfully! Welcome to Job Friends.');
+    }
+
+    public function login(): View|Factory|Application
+    {
+        return view('pages.login');
+    }
+
+    public function login_user(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+
+        if (Auth::attempt($request->only('email', 'password'))) {
+            return redirect()->route('home');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials is incorrect.',
+        ])->withInput($request->only('email'));
     }
 }

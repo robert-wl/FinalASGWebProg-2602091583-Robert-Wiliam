@@ -1,6 +1,7 @@
 @extends('layouts.app') <!-- Assuming a layout file exists -->
 
 @section('content')
+    <x-navbar/>
     <div class="container">
         <h1 class="text-center my-4">
             Welcome to ConnectFriend
@@ -36,11 +37,13 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $user->name }}</h5>
                             @auth
-                                <form action="{{ route('wishlist.add') }}" method="POST" class="mt-2">
-                                    @csrf
-                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                    <button type="submit" class="btn btn-success">Thumb</button>
-                                </form>
+                                @if(!$user->is_friended() && !$user->is_wished())
+                                    <form action="{{ route('friends.add') }}" method="POST" class="mt-2">
+                                        @csrf
+                                        <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                        <button type="submit" class="btn btn-success">Thumb</button>
+                                    </form>
+                                @endif
                             @endauth
                         </div>
                     </div>

@@ -101,4 +101,10 @@ class AuthController extends Controller
             'email' => 'The provided credentials is incorrect.',
         ])->withInput($request->only('email'));
     }
+
+    public function logout(): RedirectResponse
+    {
+        auth()->logout();
+        return redirect()->route('login');
+    }
 }

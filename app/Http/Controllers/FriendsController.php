@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 
 class FriendsController extends Controller
@@ -29,17 +30,32 @@ class FriendsController extends Controller
             return redirect()->route('login');
         }
 
-        $outgoingRequests = $this->wishlist->where('user_id', $user->id)
-            ->with('wishedUser')
-            ->get();
+        $acceptedFriends = $user->friends()->where('status', 'accepted')->get();
 
         $incomingRequests = $this->wishlist->where('wished_user_id', $user->id)
             ->with('user')
             ->get();
 
-        return view('wishlist.index', [
-            'outgoingRequests' => $outgoingRequests,
+        return view('pages.friends', [
+            'acceptedFriends' => $acceptedFriends,
             'incomingRequests' => $incomingRequests,
         ]);
+    }
+
+    public function add_friend(Request $request): RedirectResponse
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $this->wishlist->create([
+            'user_id' => $user->id,
+            'wished_user_id' => $request->user_id,
+        ]);
+
+        return redirect()->route('friends');
+
     }
 }

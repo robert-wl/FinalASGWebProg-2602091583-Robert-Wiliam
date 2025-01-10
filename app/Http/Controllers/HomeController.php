@@ -24,12 +24,14 @@ class HomeController extends Controller
 
 
         if (!$current_user) {
-            $users = $this->user->get();
+            $users = $this->user->paginate(10);
             return view('pages.home', [
                 'users' => $users,
             ]);
         }
-        $users = $this->user->get()->except($current_user->id);
+        $users = $this->user->where('id', '!=', $current_user->id)
+            ->where('visibility', true)
+            ->paginate(10);
         return view('pages.home', [
             'users' => $users,
         ]);
@@ -43,7 +45,7 @@ class HomeController extends Controller
 
         $users = $this->user->where('gender', $request->gender)
             ->where('visibility', true)
-            ->get();
+            ->paginate(10);
 
         return view('pages.home', [
             'users' => $users,
@@ -58,7 +60,7 @@ class HomeController extends Controller
 
         $users = $this->user->where('summary', 'like', '%' . $request->search . '%')
             ->where('visibility', true)
-            ->get();
+            ->paginate(10);
 
         return view('pages.home', [
             'users' => $users,

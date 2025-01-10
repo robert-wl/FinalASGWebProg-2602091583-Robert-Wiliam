@@ -24,7 +24,9 @@ class HomeController extends Controller
 
 
         if (!$current_user) {
-            $users = $this->user->paginate(10);
+            $users = $this->user
+                ->where('visibility', true)
+                ->paginate(10);
             return view('pages.home', [
                 'users' => $users,
             ]);

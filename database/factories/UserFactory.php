@@ -24,6 +24,12 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $fields = [];
+
+        foreach (range(1, 10) as $index) {
+            $fields[] = $this->faker->word();
+        }
+
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
@@ -33,6 +39,7 @@ class UserFactory extends Factory
             'summary' => $this->faker->paragraph(),
             'linkedin' => $this->faker->url(),
             'mobile' => $this->faker->phoneNumber(),
+            'fields' => implode(', ', $fields),
             'registration_fee' => $this->faker->randomFloat(2, 0, 1000),
             'coins' => $this->faker->numberBetween(0, 1000),
             'visibility' => $this->faker->boolean(),

@@ -37,7 +37,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $user->name }}</h5>
                             @auth
-                                @if(!$user->is_friended() && !$user->is_wished())
+                                @if(!$user->is_friended())
                                     <form action="{{ route('friends.add') }}" method="POST" class="mt-2">
                                         @csrf
                                         <input type="hidden" name="user_id" value="{{ $user->id }}">
@@ -45,6 +45,8 @@
                                     </form>
                                 @endif
                             @endauth
+                            <p>Profession: {{ $user->summary }}</p>
+                            <p>Interests: {{ $user->fields }}</p>
                         </div>
                     </div>
                 </div>
@@ -53,6 +55,8 @@
                     <p class="text-center text-muted">No users found. Try adjusting the filters or searching.</p>
                 </div>
             @endforelse
+
+            {{ $users->links() }}
         </div>
     </div>
 @endsection

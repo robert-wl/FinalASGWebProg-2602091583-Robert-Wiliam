@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -18,41 +19,22 @@ class Friend extends Authenticatable
      *
      * @var list<string>
      */
+
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'gender',
-        'summary',
-        'linkedin',
-        'mobile',
-        'coins',
-        'visibility',
-        'avatar',
-        'paid',
-        'registration_fee'
+        'user_id',
+        'friend_id',
+        'status',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function user(): BelongsTo
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function friend(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'friend_id');
+    }
+
 }

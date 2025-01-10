@@ -44,26 +44,25 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function friends(): BelongsToMany
+    public function friendsOfMine(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');
     }
 
-    public function wished(): BelongsToMany
+    public function friendsOf(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'wishlists', 'user_id', 'wished_user_id');
+        return $this->belongsToMany(User::class, 'friends', 'friend_id', 'user_id');
     }
 
     public function is_friended(): bool
     {
         $current_user = auth()->user();
-        return $current_user->friends->contains($this);
+        return $current_user->allFriends()->contains($this);
     }
 
-    public function is_wished(): bool
+    public function allFriends()
     {
-        $current_user = auth()->user();
-        return $current_user->wished->contains($this);
+        return $this->friendsOfMine->merge($this->friendsOf);
     }
 
     /**

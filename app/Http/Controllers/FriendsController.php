@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Friend;
 use App\Models\User;
-use App\Models\Wishlist;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -13,13 +13,13 @@ use Illuminate\Http\Request;
 
 class FriendsController extends Controller
 {
-    private User $user;
-    private Wishlist $wishlist;
+    private User $users;
+    private Friend $friends;
 
-    public function __construct(User $user, Wishlist $wishlist)
+    public function __construct(User $user, Friend $friend)
     {
-        $this->user = $user;
-        $this->wishlist = $wishlist;
+        $this->users = $user;
+        $this->friends = $friend;
     }
 
     public function index(): Factory|View|Application|RedirectResponse
@@ -30,14 +30,14 @@ class FriendsController extends Controller
             return redirect()->route('login');
         }
 
-        $acceptedFriends = $user->friends()->where('status', 'accepted')->get();
 
-        $incomingRequests = $this->wishlist->where('wished_user_id', $user->id)
+        $incomingRequests = $this->friends->where('friend_id', $user->id)
+            ->where('status', 'pending')
             ->with('user')
             ->get();
 
         return view('pages.friends', [
-            'acceptedFriends' => $acceptedFriends,
+            'acceptedFriends' => $user->allFriends(),
             'incomingRequests' => $incomingRequests,
         ]);
     }
@@ -50,12 +50,60 @@ class FriendsController extends Controller
             return redirect()->route('login');
         }
 
-        $this->wishlist->create([
+        $this->friends->create([
             'user_id' => $user->id,
-            'wished_user_id' => $request->user_id,
+            'friend_id' => $request->user_id,
+            'status' => 'pending',
         ]);
 
-        return redirect()->route('friends');
+        return redirect()->route('home');
+    }
 
+    public function accept_friend(string $id): RedirectResponse
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $this->friends->where('id', $id)
+            ->update(['status' => 'accepted']);
+
+
+        return redirect()->route('friends');
+    }
+
+    public function reject_friend(string $id): RedirectResponse
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $this->friends->where('id', $id)
+            ->update(['status' => 'rejected']);
+
+        return redirect()->route('friends');
+    }
+
+    public function remove_friend(string $id): RedirectResponse
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $this->friends->where('friend_id', $id)
+            ->where('user_id', $user->id)
+            ->delete();
+
+        $this->friends->where('user_id', $id)
+            ->where('friend_id', $user->id)
+            ->delete();
+
+        return redirect()->route('friends');
     }
 }

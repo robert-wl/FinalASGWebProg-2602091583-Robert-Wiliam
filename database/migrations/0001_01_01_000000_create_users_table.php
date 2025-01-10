@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->enum('gender', ['Male', 'Female']);
             $table->text('summary')->nullable();
             $table->string('linkedin')->nullable();
+            $table->string('fields');
             $table->string('mobile');
             $table->string('registration_fee')->nullable();
             $table->integer('coins')->default(0);

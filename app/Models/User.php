@@ -6,6 +6,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -31,7 +32,8 @@ class User extends Authenticatable
         'visibility',
         'avatar',
         'paid',
-        'registration_fee'
+        'registration_fee',
+        'language'
     ];
 
     /**
@@ -44,6 +46,20 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function is_friended(): bool
+    {
+        $current_user = auth()->user();
+        return $current_user->allFriends()->contains($this);
+    }
+
+    public function allFriends()
+    {
+        $friendsOfMine = $this->friendsOfMine()->wherePivot('status', 'accepted')->get();
+        $friendsOf = $this->friendsOf()->wherePivot('status', 'accepted')->get();
+
+        return $friendsOfMine->merge($friendsOf);
+    }
+
     public function friendsOfMine(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');
@@ -54,15 +70,14 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'friends', 'friend_id', 'user_id');
     }
 
-    public function is_friended(): bool
+    public function sentMessages(): HasMany
     {
-        $current_user = auth()->user();
-        return $current_user->allFriends()->contains($this);
+        return $this->hasMany(Message::class, 'sender_id');
     }
 
-    public function allFriends()
+    public function receivedMessages(): HasMany
     {
-        return $this->friendsOfMine->merge($this->friendsOf);
+        return $this->hasMany(Message::class, 'receiver_id');
     }
 
     /**

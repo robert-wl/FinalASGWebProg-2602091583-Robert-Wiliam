@@ -107,4 +107,21 @@ class AuthController extends Controller
         auth()->logout();
         return redirect()->route('login');
     }
+
+    public function toggle_visibility(Request $request): RedirectResponse
+    {
+        $user = auth()->user();
+
+        if ($user->visibility) {
+            $user->visibility = false;
+            $user->coins -= 50;
+        } else {
+            $user->visibility = true;
+            $user->coins -= 5;
+        }
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'Profile visibility updated successfully.');
+    }
 }

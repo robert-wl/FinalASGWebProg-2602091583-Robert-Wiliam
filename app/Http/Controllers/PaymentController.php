@@ -78,4 +78,18 @@ class PaymentController extends Controller
 
         return back()->with('message', 'Invalid action.');
     }
+
+    public function topup_page(): View|Factory|Application
+    {
+        return view('pages.topup');
+    }
+
+    public function topup(): RedirectResponse
+    {
+        $currentUser = $this->user->find(auth()->id());
+        $currentUser->coins += 100;
+        $currentUser->save();
+
+        return redirect()->route('topup')->with('message', 'Top up successful!');
+    }
 }

@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->boolean('visibility')->default(true);
             $table->boolean('paid')->default(false);
             $table->string('avatar')->nullable();
+            $table->string('language')->default('en');
             $table->rememberToken();
             $table->timestamps();
         });

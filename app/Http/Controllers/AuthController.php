@@ -108,7 +108,7 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
-    public function toggle_visibility(Request $request): RedirectResponse
+    public function toggle_visibility(): RedirectResponse
     {
         $user = auth()->user();
 

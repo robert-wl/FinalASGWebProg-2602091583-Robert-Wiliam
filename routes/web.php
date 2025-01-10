@@ -13,13 +13,14 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login', [AuthController::class, 'login_user'])->name('login_user');
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register', [AuthController::class, 'create_user'])->name('create_user');
-    Route::get('/', [HomeController::class, 'home'])->name('home');
 });
+
+Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/filter', [HomeController::class, 'filter'])->name('home.filter');
+Route::get('/search', [HomeController::class, 'search'])->name('home.search');
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/filter', [HomeController::class, 'filter'])->name('home.filter');
-    Route::get('/search', [HomeController::class, 'search'])->name('home.search');
     Route::get('/friends', [FriendsController::class, 'index'])->name('friends');
     Route::post('/friends', [FriendsController::class, 'add_friend'])->name('friends.add');
     Route::post('/friends/{id}/accept', [FriendsController::class, 'accept_friend'])->name('friends.accept');

@@ -90,7 +90,7 @@
                                             @lang('friend.you_are_friends')
                                         </p>
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <a href="{{ route('messages.show', $friend->id) }}"
+                                            <a href="{{ route('message.person', $friend->id) }}"
                                                class="btn btn-outline-primary">
                                                 <i class="bi bi-chat-dots me-2"></i>
                                                 @lang('friend.message')

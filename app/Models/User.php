@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -31,6 +32,7 @@ class User extends Authenticatable
         'coins',
         'visibility',
         'avatar',
+        'fields',
         'paid',
         'registration_fee',
         'language'
@@ -48,8 +50,14 @@ class User extends Authenticatable
 
     public function is_friended(): bool
     {
-        $current_user = auth()->user();
-        return $current_user->allFriends()->contains($this);
+        $res = DB::table('friends')
+            ->where('user_id', $this->id)
+            ->where('friend_id', auth()->id())
+            ->orWhere('user_id', auth()->id())
+            ->where('friend_id', $this->id)
+            ->first();
+        
+        return $res !== null;
     }
 
     public function allFriends()

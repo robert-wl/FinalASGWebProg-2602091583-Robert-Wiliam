@@ -11,4 +11,5 @@ return [
     'no_accepted_friends' => 'Belum ada teman yang diterima.',
     'you_are_friends' => 'Anda berteman.',
     'remove_friend' => 'Hapus Teman',
+    'message' => 'Pesan',
 ];

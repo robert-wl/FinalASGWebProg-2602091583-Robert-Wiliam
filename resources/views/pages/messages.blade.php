@@ -34,11 +34,11 @@
             </div>
 
             <div class="col-md-8">
-                @if(isset($friend) && $friend != null)
+                @if(isset($selectedFriend) && $selectedFriend != null)
                     <div class="card shadow-sm">
                         <div class="card-header bg-success text-white">
                             <h4 class="mb-0 text-center">
-                                @lang('message.chat_with', ['name' => $friend->name])
+                                @lang('message.chat_with', ['name' => $selectedFriend->name])
                             </h4>
                         </div>
                         <div class="card-body chat-container"
@@ -72,7 +72,7 @@
                         <div class="card-footer bg-light">
                             <form action="{{ route('messages.send') }}" method="POST" class="mb-0">
                                 @csrf
-                                <input type="hidden" name="receiver_id" value="{{ $friend->id }}">
+                                <input type="hidden" name="receiver_id" value="{{ $selectedFriend->id }}">
                                 <div class="input-group">
                                     <textarea name="message"
                                               class="form-control border-2"

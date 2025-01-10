@@ -11,4 +11,5 @@ return [
     'no_accepted_friends' => 'No accepted friends yet.',
     'you_are_friends' => 'You are friends.',
     'remove_friend' => 'Remove Friend',
+    'message' => 'Message',
 ];

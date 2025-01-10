@@ -55,7 +55,8 @@ class MessageController extends Controller
         if (!$friend) {
             return redirect()->route('messages');
         }
-        
+
+        $friend = $friend->friend_id === $user->id ? $friend->user : $friend->friend;
         return view('pages.messages', [
             'messages' => $this->messages->where('receiver_id', $user->id)
                 ->where('sender_id', $id)
@@ -63,7 +64,7 @@ class MessageController extends Controller
                 ->where('sender_id', $user->id)
                 ->get(),
             'friends' => $user->allFriends(),
-            'friend' => $friend,
+            'selectedFriend' => $friend,
         ]);
     }
 

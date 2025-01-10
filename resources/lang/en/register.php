@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Find Your Job Friends',
+    'full_name' => 'Full Name',
+    'email_address' => 'Email Address',
+    'password' => 'Password',
+    'password_hint' => 'Must be at least 8 characters long and contain letters, numbers, and symbols',
+    'gender' => 'Gender',
+    'select_gender' => 'Select Gender',
+    'male' => 'Male',
+    'female' => 'Female',
+    'fields_of_interest' => 'Fields of Interest',
+    'fields_hint' => 'Select at least 3 fields that interest you',
+    'linkedin_username' => 'LinkedIn Username',
+    'mobile_number' => 'Mobile Number',
+    'professional_summary' => 'Professional Summary',
+    'summary_hint' => 'Tell us about your professional background and what you\'re looking for in job connections',
+    'registration_fee' => 'Registration Fee',
+    'create_account' => 'Create Account',
+    'professional_info' => 'Professional Information',
+    'already_have_account' => 'Already have an account?',
+    'login_here' => 'Login here',
+    'personal_info' => 'Personal Information',
+    'subtitle' => 'Join us and find your job friends',
+];
